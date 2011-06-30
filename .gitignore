@@ -1,0 +1,16 @@
+bin/
+data/
+db/
+dist/
+eclipse/
+lib/
+logs/
+modules/
+nbproject/
+precompiled/
+test-results/
+tmp/
+
+*.classpath
+*.project
+*.settings
