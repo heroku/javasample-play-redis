@@ -4,10 +4,9 @@
  */
 package services;
 
-import org.jredis.ClientRuntimeException;
-import org.jredis.JRedis;
-import org.jredis.ProviderException;
-import org.jredis.ri.alphazero.JRedisClient;
+import java.security.ProviderException;
+
+import redis.clients.jedis.Jedis;
 
 /**
  *
@@ -15,19 +14,15 @@ import org.jredis.ri.alphazero.JRedisClient;
  */
 public class RedisImpl implements Redis{
 
-    static JRedis jredis;
+	static Jedis jedis;
+//    static JRedis jredis;
 
-    public JRedis connect() {
-        if (jredis == null) {
-            try {
-                jredis = new JRedisClient("localhost", 6379);
-                //jredis.ping();
-            } catch (ProviderException e) {
-                System.out.format("Oh no, an 'un-documented feature':  %s\nKindly report it.", e.getMessage());
-            } catch (ClientRuntimeException e) {
-                System.out.format("%s\n", e.getMessage());
-            }
+    public Jedis connect() {
+        if (jedis == null) {
+        	jedis = new Jedis("localhost", 6379);
+        	jedis.ping();
         }
-        return this.jredis;
+        
+        return this.jedis;
     }
 }

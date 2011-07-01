@@ -4,11 +4,11 @@
  */
 
 package services;
-import org.jredis.JRedis;
+import redis.clients.jedis.Jedis;
 /**
  *
  * @author luciano
  */
 public interface Redis {
-    public JRedis connect();
+    public Jedis connect();
 }

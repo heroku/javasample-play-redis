@@ -5,11 +5,9 @@
 
 package controllers;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
-import org.jredis.JRedis;
-import org.jredis.RedisException;
+
+import redis.clients.jedis.Jedis;
 import services.Redis;
 
 
@@ -24,22 +22,14 @@ public class Security extends Secure.Security {
 
     static boolean authentify(String username, String password) {
         
-        JRedis jredis = redis.connect();
-        try {
-            byte[] userid = jredis.get("username:" + username + ":id");
-            if (userid!=null) {
-                byte[] pw = jredis.get("uid:"+new String(userid)+":password");
-                if (new String(pw).equals(password)) return true;
-            }
-        
-        } catch (RedisException ex) {
-            ex.printStackTrace();
+        Jedis jedis = redis.connect();
+        String userid = jedis.get("username:" + username + ":id");
+        if (userid!=null) {
+        	String pw = jedis.get("uid:"+userid+":password");
+        	if (pw.equals(password)) return true;
         }
+        
         return false;
-
-
     }
-
-
 
 }
