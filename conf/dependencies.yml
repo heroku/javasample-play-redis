@@ -4,3 +4,13 @@ require:
     - play
     - play -> guice 1.2
     - play -> secure
+    - localrepo -> jredis-core-all a.0-SNAPSHOT-jar-with-dependencies
+    - localrepo -> ocpsoft-pretty-time 1.0.4
+    
+repositories:
+
+  - localrepo:
+      type:       local
+      artifact:   "${application.path}/localrepo/[module]-[revision].jar"
+      contains:
+          - localrepo -> *
