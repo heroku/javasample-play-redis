@@ -7,6 +7,7 @@ package services;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import play.Logger;
 import play.Play;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
@@ -18,7 +19,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
  */
 public class RedisImpl implements Redis {
 
-	private static final Pattern REDIS_URL_PATTERN = Pattern.compile("^redis://([^:]*):([^@]*)@([^:]*):([^/])");
+	private static final Pattern REDIS_URL_PATTERN = Pattern.compile("^redis://([^:]*):([^@]*)@([^:]*):([^/]*)(/)?");
 	
 	static Jedis jedis;
 
@@ -32,10 +33,13 @@ public class RedisImpl implements Redis {
         	if ((redisUrl = Play.configuration.getProperty("redis.url")) != null
         			&& (redisUrlMatcher = REDIS_URL_PATTERN.matcher(redisUrl)).matches()) {
         		
+        		Logger.info("Connecting to redis using url: " + redisUrl);
+        		
         		String name = redisUrlMatcher.group(1);
         		String password = redisUrlMatcher.group(2);
         		String host = redisUrlMatcher.group(3);
         		int port = Integer.parseInt(redisUrlMatcher.group(4));
+        		Logger.info("Parsed redis url: name -> " + name + ", password -> " + password + ", host -> " + host + ", port -> " + port);
         		
         		jedisShardInfo = new JedisShardInfo(host, port, name);
         		jedisShardInfo.setPassword(password);
@@ -46,8 +50,10 @@ public class RedisImpl implements Redis {
         		if (Play.configuration.containsKey("redis.port")) {
         			int port = Integer.parseInt(Play.configuration.getProperty("redis.port"));
         			jedisShardInfo = new JedisShardInfo(host, port);
+        			Logger.info("Connecting to redis using: host -> " + host + ", port -> " + port);
         		} else {
         			jedisShardInfo = new JedisShardInfo(host);
+        			Logger.info("Connecting to redis using: host -> " + host);
         		}
         		
         		if (Play.configuration.containsKey("redis.password")) {
