@@ -10,13 +10,14 @@ import javax.inject.Inject;
 import play.mvc.Controller;
 import java.util.List;
 import models.Post;
+import services.RedisImpl;
 import services.Twayis;
 import controllers.*;
 /**
  *
  * @author luciano
  */
-@With(Secure.class)
+@With({Secure.class, RedisImpl.class})
 public class Engine extends Controller {
     @Inject
     static Twayis twayis;

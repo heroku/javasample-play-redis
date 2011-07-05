@@ -16,7 +16,7 @@ import com.google.inject.Inject;
  *
  * @author luciano
  */
-public class TwayisImpl implements Twayis{
+public class TwayisImpl implements Twayis {
     private static final String GLOBALTIMELINE = "global:timeline";
     @Inject
     private Redis redis;

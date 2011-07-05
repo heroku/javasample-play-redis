@@ -7,14 +7,17 @@ package controllers;
 
 import javax.inject.Inject;
 
+import play.mvc.With;
 import redis.clients.jedis.Jedis;
 import services.Redis;
+import services.RedisImpl;
 
 
 /**
  *
  * @author luciano
  */
+@With(RedisImpl.class)
 public class Security extends Secure.Security {
     
     @Inject
