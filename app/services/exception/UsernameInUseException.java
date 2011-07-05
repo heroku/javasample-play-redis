@@ -1,6 +1,4 @@
-
-
-package services;
+package services.exception;
 
 /**
  *
@@ -9,6 +7,6 @@ package services;
 public class UsernameInUseException extends RuntimeException {
     
     public UsernameInUseException(String message) {
-	super(message);
+    	super(message);
     }
 }

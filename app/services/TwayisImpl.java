@@ -8,6 +8,8 @@ import java.util.Set;
 
 import models.Post;
 import redis.clients.jedis.Jedis;
+import services.exception.RegistrationPasswordException;
+import services.exception.UsernameInUseException;
 
 import com.google.inject.Inject;
 /**
@@ -76,6 +78,14 @@ public class TwayisImpl implements Twayis{
     	return redis.connect().sismember("uid:" + getUserId(username) + ":following", getUserId(followingWho));
     }
 
+    public void checkPassword(String password, String password2) {
+    	if (password == null || password.isEmpty()) {
+    		throw new RegistrationPasswordException("password cannot be empty");
+    	} else if (!password.equals(password2)) {
+    		throw new RegistrationPasswordException("passwords do not match");
+    	}
+    }
+    
     public void register(String username, String pazz) {
     	Jedis jedis = redis.connect();
     	String user = jedis.get("username:" + username + ":id");

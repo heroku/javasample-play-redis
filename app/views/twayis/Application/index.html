@@ -15,8 +15,19 @@
 <tr>
   <td>Password (again)</td><td><input type="password" name="password2"></td>
 </tr>
+#{if flash.error}
 <tr>
-<td colspan="2" align="right"><input type="submit" name="doit" value="Create an account"></td></tr>
+  <td colspan="2" align="right"><div style="color:#c00">${flash.error}</div></td>
+</tr>
+#{/if}
+#{elseif flash.success}
+<tr>
+  <td colspan="2" align="right"><div style="color:#0c0">${flash.success}</div></td>
+</tr>
+#{/elseif}
+<tr>
+  <td colspan="2" align="right"><input type="submit" name="doit" value="Create an account"></td>
+</tr>
 </table>
 #{/form}
 
@@ -32,8 +43,9 @@
 </form>
 
 </div>
-    Hello! Twayis is Java port of <a href="http://retwis.antirez.com">Retwis</a>, a  <a href="http://twitter.com">Twitter</a> clone used as a demo for the <a href="http://code.google.com/p/redis/">Redis</a> key-value database.<br>
-    Twayis uses the <a href="www.playframework.org">Play!</a> as a web framework.
+    Hello! Twayis is Java port of <a href="http://retwis.antirez.com">Retwis</a>, a  <a href="http://twitter.com">Twitter</a> clone used as a demo for the <a href="http://code.google.com/p/redis/">Redis</a> key-value database.
+    Twayis uses the <a href="www.playframework.org">Play!</a> as a web framework.<br> <br>
+    <b>This version of Twayis was adapted for the <a href="www.heroku.com">heroku platform</a>.</b>
 <br><br>Key points:
 <ul>
 <li>Redis is a key-value DB, and it is <b>the only DB used</b> by this application, no MySQL or alike at all.</li>

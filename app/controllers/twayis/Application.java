@@ -1,10 +1,13 @@
 
 package controllers.twayis;
 
-import play.mvc.Controller;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import models.Post;
+import play.Logger;
+import play.mvc.Controller;
 import services.Twayis;
 
 /**
@@ -33,19 +36,18 @@ public class Application extends Controller {
 
     public static void register(String username, String password, String password2) {
         try {
-            // TODO check that passwords match..
-
+            twayis.checkPassword(password, password2);
             twayis.register(username, password);
             // login the user..
             //controllers.Secure.auth(username, password);
-
+            flash.success(username + " successfully registered");
         } catch (Throwable e) {
-            // TODO ... handle exception
-            e.printStackTrace();
+        	Logger.warn(e, "Unable to register user '" + username + "'");
+        	flash.error(e.getMessage());
         }
         index();
     }
-
+    
     public static void profile(String username) {
         
         if (username != null) {

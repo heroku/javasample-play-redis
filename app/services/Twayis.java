@@ -16,6 +16,7 @@ public interface Twayis {
     boolean isFollowing(String username, String followingWho);
     String getUserId(String username);
     List<Post> timeline(int maxTweets);
+    void checkPassword(String password, String password2);
     void register(String username, String pazz);
     long post(String username, String status);
     
