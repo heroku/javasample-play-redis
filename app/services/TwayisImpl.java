@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import models.Post;
+import play.Logger;
 import redis.clients.jedis.Jedis;
 import services.exception.RegistrationPasswordException;
 import services.exception.UsernameInUseException;
@@ -46,14 +47,14 @@ public class TwayisImpl implements Twayis {
         Jedis jedis = redis.connect();
         jedis.sadd("uid:" + getUserId(userToFollow)+":followers", getUserId(currentUser));
         jedis.sadd("uid:" + getUserId(currentUser)+":following", getUserId(userToFollow));
-        System.out.println(currentUser + " is now following " + userToFollow);
+        Logger.info(currentUser + " is now following " + userToFollow);
     }
 
     public void unfollow(String currentUser, String userToUnFollow) {
         Jedis jedis = redis.connect();
         jedis.srem("uid:" + getUserId(userToUnFollow)+":followers", getUserId(currentUser));
         jedis.srem("uid:" + getUserId(currentUser)+":following", getUserId(userToUnFollow));
-        System.out.println(currentUser + " is not following " + userToUnFollow + " anymore");
+        Logger.info(currentUser + " is not following " + userToUnFollow + " anymore");
     }
 
     public long getFollowersCount(final String username) {
