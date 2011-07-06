@@ -31,9 +31,7 @@ public class Engine extends Controller {
     }
 
     public static void post(String status) {
-
         twayis.post(session.get("username"), status);
-
         home();
     }
 
@@ -46,7 +44,5 @@ public class Engine extends Controller {
         twayis.unfollow(session.get("username"), username);
         renderJSON("{status:\"ok\"}");
     }
-
-    
 
 }

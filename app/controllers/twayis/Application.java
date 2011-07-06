@@ -39,10 +39,10 @@ public class Application extends Controller {
 
     public static void register(String username, String password, String password2) {
         try {
+            twayis.checkUsername(username);
             twayis.checkPassword(password, password2);
             twayis.register(username, password);
-            // login the user..
-            //controllers.Secure.auth(username, password);
+
             flash.success(username + " successfully registered");
         } catch (Throwable e) {
         	Logger.warn(e, "Unable to register user '" + username + "'");

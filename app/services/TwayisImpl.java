@@ -5,11 +5,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import models.Post;
 import play.Logger;
 import redis.clients.jedis.Jedis;
 import services.exception.RegistrationPasswordException;
+import services.exception.RegistrationUsernameException;
 import services.exception.UsernameInUseException;
 
 import com.google.inject.Inject;
@@ -18,6 +21,10 @@ import com.google.inject.Inject;
  * @author luciano
  */
 public class TwayisImpl implements Twayis {
+	
+	private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s");
+	private static final int MIN_USERNAME_CHARS = 5;
+	
     private static final String GLOBALTIMELINE = "global:timeline";
     @Inject
     private Redis redis;
@@ -79,6 +86,21 @@ public class TwayisImpl implements Twayis {
     	return redis.connect().sismember("uid:" + getUserId(username) + ":following", getUserId(followingWho));
     }
 
+    public void checkUsername(String username) {
+    	Matcher whitespaceMatcher = PATTERN_WHITESPACE.matcher(username);
+    	if (whitespaceMatcher.find()) {
+    		throw new RegistrationUsernameException("username cannot contain whitespace");
+    	} else if (username.length() < MIN_USERNAME_CHARS) {
+    		throw new RegistrationUsernameException("username must be at least " + MIN_USERNAME_CHARS + " characters long");
+    	}
+    	
+    	Jedis jedis = redis.connect();
+    	String user = jedis.get("username:" + username + ":id");
+    	if (user != null) {
+    		throw new UsernameInUseException("username '" + username + "' is already in use");    		
+    	}
+    }
+    
     public void checkPassword(String password, String password2) {
     	if (password == null || password.isEmpty()) {
     		throw new RegistrationPasswordException("password cannot be empty");
@@ -89,15 +111,11 @@ public class TwayisImpl implements Twayis {
     
     public void register(String username, String pazz) {
     	Jedis jedis = redis.connect();
-    	String user = jedis.get("username:" + username + ":id");
-    	if (user != null) {
-    		throw new UsernameInUseException("Username " + username + " is already in use");
-        } else {
-        	final long userid = jedis.incr("global:nextUserId");
-        	jedis.set("username:" + username + ":id", Long.toString(userid));
-        	jedis.set("uid:" + userid + ":username", username);
-        	jedis.set("uid:" + userid + ":password", pazz);
-        }
+    	
+    	final long userid = jedis.incr("global:nextUserId");
+    	jedis.set("username:" + username + ":id", Long.toString(userid));
+    	jedis.set("uid:" + userid + ":username", username);
+    	jedis.set("uid:" + userid + ":password", pazz);
     }
 
     public long post(String username, String status) {
@@ -107,6 +125,7 @@ public class TwayisImpl implements Twayis {
         // increment global posts counter (sequence)
         postid = jedis.incr("global:nextPostId");
         String userid = getUserId(username);
+        
         // Create string to post to redis (userid, timestamp, tweet)
         final String post = userid+"|"+System.currentTimeMillis()+"|"+status;
         // Add the post to redis

@@ -8,16 +8,20 @@ import models.Post;
  * @author luciano
  */
 public interface Twayis {
-    List<Post> getUserPosts(String username,int maxPosts);
     void follow(String currentUser, String userToFollow);
     void unfollow(String currentUser, String userToUnFollow);
+    long post(String username, String status);
+    List<Post> timeline(int maxTweets);
+    
+    List<Post> getUserPosts(String username,int maxPosts);
+    String getUserId(String username);
+    boolean isFollowing(String username, String followingWho);
     long getFollowersCount(String username);
     long getFollowingCount(String username);
-    boolean isFollowing(String username, String followingWho);
-    String getUserId(String username);
-    List<Post> timeline(int maxTweets);
+    
+    
+    void checkUsername(String username);
     void checkPassword(String password, String password2);
     void register(String username, String pazz);
-    long post(String username, String status);
     
 }
