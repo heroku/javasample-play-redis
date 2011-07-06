@@ -33,9 +33,10 @@ public class RedisImpl extends Controller implements Redis {
 	static JedisPool jedisPool;
 
     public Jedis connect() {
+    	// We'll maintain the same connection
+    	// throughout the request
     	if (TL_JEDIS.get() != null) {
-    		disconnect(TL_JEDIS.get());
-    		TL_JEDIS.remove();
+    		return TL_JEDIS.get();
     	}
     	
     	Jedis jedis = getPool().getResource();
@@ -44,7 +45,9 @@ public class RedisImpl extends Controller implements Redis {
     }
     
     public void disconnect(Jedis jedis) {
-    	getPool().returnResource(jedis);
+    	if (jedisPool != null) {
+    		jedisPool.returnResource(jedis);
+    	}
     }
     
     JedisPool getPool() {
@@ -52,6 +55,7 @@ public class RedisImpl extends Controller implements Redis {
     		jedisPool = initPool();
     		
     		// Make sure the pool is destroyed during shutdown
+    		// (as per https://github.com/xetorthio/jedis/wiki)
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
                     jedisPool.destroy();
@@ -108,6 +112,9 @@ public class RedisImpl extends Controller implements Redis {
     	return new JedisPool(config, host, port, timeout, password);
     }
     
+    // This is run at the end of each request to ensure that
+    // the connection is returned to the pool.
+    // (as per https://github.com/xetorthio/jedis/wiki)
 	@Finally
 	static void disconnectRemainingConnection() {
     	if (TL_JEDIS.get() != null) {
