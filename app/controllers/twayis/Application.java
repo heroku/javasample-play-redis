@@ -9,6 +9,7 @@ import models.Post;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.With;
+import redis.clients.jedis.exceptions.JedisException;
 import services.RedisImpl;
 import services.Twayis;
 
@@ -44,9 +45,12 @@ public class Application extends Controller {
             twayis.register(username, password);
 
             flash.success(username + " successfully registered");
-        } catch (Throwable e) {
-        	Logger.warn(e, "Unable to register user '" + username + "'");
-        	flash.error(e.getMessage());
+        } catch (JedisException je) {
+            Logger.warn(je, "Unable to register user '%s' due to Jedis error", username);
+            flash.error("Unexpected application error. Please try again later");
+        } catch (Throwable t) {
+        	Logger.warn(t, "Unable to register user '%s'", username);
+        	flash.error(t.getMessage());
         }
         index();
     }
