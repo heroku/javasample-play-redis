@@ -1,1 +1,1 @@
-web:    play run --http.port=$PORT -Dprecompiled=true
+web:    play run --%$FRAMEWORK_ID --http.port=$PORT -Dprecompiled=$USE_PRECOMPILED
