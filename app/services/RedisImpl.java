@@ -28,19 +28,19 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 public class RedisImpl extends Controller implements Redis {
 
 	private static final Pattern REDIS_URL_PATTERN = Pattern.compile("^redis://([^:]*):([^@]*)@([^:]*):([^/]*)(/)?");
-	private static final ThreadLocal<Jedis> TL_JEDIS = new ThreadLocal<Jedis>();
+	private static final ThreadLocal<Jedis> CURRENT_JEDIS = new ThreadLocal<Jedis>();
 	
 	static JedisPool jedisPool;
 
     public Jedis connect() {
     	// We'll maintain the same connection
     	// throughout the request
-    	if (TL_JEDIS.get() != null) {
-    		return TL_JEDIS.get();
+    	if (CURRENT_JEDIS.get() != null) {
+    		return CURRENT_JEDIS.get();
     	}
     	
     	Jedis jedis = getPool().getResource();
-    	TL_JEDIS.set(jedis);
+    	CURRENT_JEDIS.set(jedis);
         return jedis;
     }
     
@@ -117,13 +117,13 @@ public class RedisImpl extends Controller implements Redis {
     // (as per https://github.com/xetorthio/jedis/wiki)
 	@Finally
 	static void disconnectRemainingConnection() {
-    	if (TL_JEDIS.get() != null) {
+    	if (CURRENT_JEDIS.get() != null) {
     		
     		if (jedisPool != null) {
-    			jedisPool.returnResource(TL_JEDIS.get());
+    			jedisPool.returnResource(CURRENT_JEDIS.get());
     		}
     		
-    		TL_JEDIS.remove();
+    		CURRENT_JEDIS.remove();
     	}
 	}
 }
