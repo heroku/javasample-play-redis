@@ -14,5 +14,8 @@ tmp/
 *.classpath
 *.project
 *.settings
+*.cache
+*.play
+*.ivy2
 
 twayis_profile

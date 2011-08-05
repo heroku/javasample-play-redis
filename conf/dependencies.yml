@@ -2,15 +2,8 @@
 
 require:
     - play
+    - play -> secure
     - play -> guice 1.2
-    - playCore -> secure 1.2.1
     - com.ocpsoft -> ocpsoft-pretty-time 1.0.4:
         transitive: false
     - redis.clients -> jedis 2.0.0
-    
-repositories:
-    - playCoreTest:
-        type:       local
-        artifact:   "${play.path}/modules/[module].zip"
-        contains:
-            - playCore -> *
