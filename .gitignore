@@ -17,5 +17,4 @@ tmp/
 *.cache
 *.play
 *.ivy2
-
-twayis_profile
+dev_profile
