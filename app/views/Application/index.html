@@ -1,4 +1,31 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+<h4>Persist Key/Value to Redis</h4>
+
+<form action="@{Application.persist()}" method="GET">
+Key: <input type="text" name="key"><br>
+Value: <input type="text" name="value"><br>
+<input type="submit" value="Persist Key/Value">
+</form>
+
+<hr>
+<div id="contents"/>
+
+<script type="text/javascript">
+  $(function() {
+    contents();
+  });
+  
+  function contents() {
+    $.getJSON('/contents', function(json) {
+      var $div = $('<div id="contents" />');
+    
+      for(key in json) {
+        var value = json[key];
+        $div.append('<tr><td align="left">' + key + '</td><td> => </td><td align="left">' + value + '</td></tr>');
+      }
+      $('#contents').replaceWith($div);
+    });
+  }
+</script>

@@ -1,16 +1,31 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
-import java.util.*;
-
-import models.*;
+import play.modules.redis.Redis;
+import play.mvc.Controller;
 
 public class Application extends Controller {
 
     public static void index() {
         render();
     }
-
+    
+    public static void persist(String key, String value) {
+    	Redis.set(key, value);
+    	index();
+    }
+    
+    public static void contents() {
+    	Set<String> keys = Redis.keys("*");
+    	
+    	Map<String, Object> redisContents = new TreeMap<String, Object>();
+    	for (String key : keys) {
+    		redisContents.put(key, Redis.get(key));
+    	}
+    	
+    	renderJSON(redisContents);
+    }
 }

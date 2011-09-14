@@ -14,7 +14,4 @@ tmp/
 *.classpath
 *.project
 *.settings
-*.cache
-*.play
-*.ivy2
-dev_profile
+dev.env
