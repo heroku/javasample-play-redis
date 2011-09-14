@@ -18,6 +18,11 @@ public class Application extends Controller {
     	index();
     }
     
+    public static void clear() {
+    	Redis.flushAll();
+    	index();
+    }
+    
     public static void contents() {
     	Set<String> keys = Redis.keys("*");
     	

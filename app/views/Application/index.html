@@ -9,6 +9,10 @@ Value: <input type="text" name="value"><br>
 <input type="submit" value="Persist Key/Value">
 </form>
 
+<form action="@{Application.clear()}" method="GET">
+<input type="submit" value="Clear Redis">
+</form>
+
 <hr>
 <div id="contents"/>
 
