@@ -3,13 +3,13 @@
 
 <h4>Persist Key/Value to Redis</h4>
 
-<form action="@{Application.persist()}" method="GET">
+<form action="@{Application.persist()}" method="POST">
 Key: <input type="text" name="key"><br>
 Value: <input type="text" name="value"><br>
 <input type="submit" value="Persist Key/Value">
 </form>
 
-<form action="@{Application.clear()}" method="GET">
+<form action="@{Application.clear()}" method="POST">
 <input type="submit" value="Clear Redis">
 </form>
 
