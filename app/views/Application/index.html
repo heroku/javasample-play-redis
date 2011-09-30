@@ -4,32 +4,35 @@
 <h4>Persist Key/Value to Redis</h4>
 
 <form action="@{Application.persist()}" method="POST">
-Key: <input type="text" name="key"><br>
-Value: <input type="text" name="value"><br>
-<input type="submit" value="Persist Key/Value">
+  Key: <input type="text" name="key"><br />
+  Value: <input type="text" name="value"><br />
+  <input type="submit" value="Persist Key/Value">
 </form>
 
 <form action="@{Application.clear()}" method="POST">
-<input type="submit" value="Clear Redis">
+  <input type="submit" value="Clear Redis">
 </form>
 
-<hr>
-<div id="contents"/>
+<hr />
+<table> 
+	<thead>
+		<tr>
+			<th>Key</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<tbody id="contents"></tbody>
+</table>
 
 <script type="text/javascript">
-  $(function() {
-    contents();
-  });
-  
-  function contents() {
+  $(document).ready(function(){
     $.getJSON('/contents', function(json) {
-      var $div = $('<div id="contents" />');
+      var contents = $("#contents");
     
-      for(key in json) {
+      for (key in json) {
         var value = json[key];
-        $div.append('<tr><td align="left">' + key + '</td><td> => </td><td align="left">' + value + '</td></tr>');
+        contents.append(['<tr><td>', key, '</td><td>', value, '</td></tr>'].join(''));
       }
-      $('#contents').replaceWith($div);
     });
-  }
+  }); 
 </script>
