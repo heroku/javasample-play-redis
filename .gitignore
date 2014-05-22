@@ -8,6 +8,7 @@ logs/
 modules/
 nbproject/
 precompiled/
+test-result/
 test-results/
 tmp/
 
@@ -15,3 +16,4 @@ tmp/
 *.project
 *.settings
 dev.env
+*.swp
